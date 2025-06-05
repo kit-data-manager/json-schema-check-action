@@ -9,7 +9,7 @@ jobs:
         id: check
         with:
           trigger: '- [x] Finished'
-          reaction: thumbsup
+          reaction: +1
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       - run: 'echo Found it!'

@@ -5,6 +5,7 @@
  * functions and objects. For example, the core module is mocked in this test,
  * so that the actual '@actions/core' module is not imported.
  */
+// eslint-disable-next-line jest/no-commented-out-tests
 /*import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 import { wait } from '../__fixtures__/wait.js'

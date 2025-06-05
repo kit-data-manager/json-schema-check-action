@@ -8,7 +8,6 @@ export async function run(): Promise<void> {
     const schemaPath: string = core.getInput('schemaPath')
     const validate: boolean = core.getBooleanInput('validate')
     const diff: boolean = core.getBooleanInput('createDiff')
-    // @ts-expect-error Construction works
     const ajv = new Ajv()
 
     let message: string =

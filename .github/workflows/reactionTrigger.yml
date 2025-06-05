@@ -4,6 +4,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write|none
     steps:
       - uses: khan/pull-request-comment-trigger@v1.1.0
         id: check

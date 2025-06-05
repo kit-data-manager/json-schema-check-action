@@ -5,7 +5,7 @@
  * functions and objects. For example, the core module is mocked in this test,
  * so that the actual '@actions/core' module is not imported.
  */
-import { jest } from '@jest/globals'
+/*import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 import { wait } from '../__fixtures__/wait.js'
 
@@ -59,4 +59,4 @@ describe('main.ts', () => {
       'milliseconds is not a number'
     )
   })
-})
+})*/

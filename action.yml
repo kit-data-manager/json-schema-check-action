@@ -1,23 +1,27 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: JSON Schema Check
+description: Check a given JSON schema file in the repository for being valid and for differences to the previous release.
+author: Thomas Jejkal
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
-branding:
-  icon: heart
-  color: red
+#branding:
+#  icon: heart
+#  color: red
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  schemaPath:
+    description: "Relative path of the schema file to check"
     required: true
-    default: '1000'
-
-# Define your outputs here.
+  validate:
+    description: "Validate the schema itself against the JSON specification"
+    required: false
+    default: true
+  createDiff:
+    description: "Tries to create a diff to the previous release. If none exist, this will be skipped."
+    required: false
+    default: true
 outputs:
-  time:
-    description: Your output description here
+  message:
+    description: "The schema check output as markdown message."
 
 runs:
   using: node20

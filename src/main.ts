@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { diffString } from 'json-diff'
+//import { diffString } from 'json-diff'
 import Ajv from 'ajv/dist/2020'
 import * as fs from 'fs'
 
@@ -8,7 +8,6 @@ export async function run(): Promise<void> {
     const schemaPath: string = core.getInput('schemaPath')
     const validate: boolean = core.getBooleanInput('validate')
     const diff: boolean = core.getBooleanInput('createDiff')
-    // @ts-expect-error Says not constructable, but works.
     const ajv = new Ajv()
 
     let message: string =

@@ -1,5 +1,7 @@
 name: JSON Schema Check
-description: Check a given JSON schema file in the repository for being valid and for differences to the previous release.
+description:
+  Check a given JSON schema file in the repository for being valid and for
+  differences to the previous release.
 author: Thomas Jejkal
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
@@ -9,19 +11,21 @@ author: Thomas Jejkal
 
 inputs:
   schemaPath:
-    description: "Relative path of the schema file to check"
+    description: 'Relative path of the schema file to check'
     required: true
   validate:
-    description: "Validate the schema itself against the JSON specification"
+    description: 'Validate the schema itself against the JSON specification'
     required: false
     default: true
   createDiff:
-    description: "Tries to create a diff to the previous release. If none exist, this will be skipped."
+    description:
+      'Tries to create a diff to the previous release. If none exist, this will
+      be skipped.'
     required: false
     default: true
 outputs:
   message:
-    description: "The schema check output as markdown message."
+    description: 'The schema check output as markdown message.'
 
 runs:
   using: node20

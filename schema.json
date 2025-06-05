@@ -1,43 +1,39 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/schemas/template.json",
-	"title": "My Schema",
-	"type": "object12",
-	"properties": {
-		"name": {
-			"type": "string",
-			"description": "user name"
-		},
-		"orcid": {
-			"type": "string",
-			"description": "Your ORCiD URL if available."
-		},
-		"image": {
-			"type": "string",
-			"description": "An image URL, preferably a picture of you, used later on for result rendering."
-		},
-		"title": {
-			"type": "string",
-			"description": "A short title of your feedback (8 - 64 characters) used for result rendering.",
-			"minLength": 8,
-			"maxLength": 64
-		},
-		"rating": {
-			"type": "integer",
-			"description": "Workshop rating from 1 to 5",
-			"default": 3,
-			"minimum": 1,
-			"maximum": 5
-		},
-		"feedback": {
-			"type": "string",
-			"description": "A short feedback on what you liked most/less or on what could be improved.",
-			"maxLength": 512
-		}
-	},
-	"required": [
-		"name",
-		"title",
-		"rating"
-	]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/template.json",
+  "title": "My Schema",
+  "type": "object12",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "user name"
+    },
+    "orcid": {
+      "type": "string",
+      "description": "Your ORCiD URL if available."
+    },
+    "image": {
+      "type": "string",
+      "description": "An image URL, preferably a picture of you, used later on for result rendering."
+    },
+    "title": {
+      "type": "string",
+      "description": "A short title of your feedback (8 - 64 characters) used for result rendering.",
+      "minLength": 8,
+      "maxLength": 64
+    },
+    "rating": {
+      "type": "integer",
+      "description": "Workshop rating from 1 to 5",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 5
+    },
+    "feedback": {
+      "type": "string",
+      "description": "A short feedback on what you liked most/less or on what could be improved.",
+      "maxLength": 512
+    }
+  },
+  "required": ["name", "title", "rating"]
 }

@@ -28,7 +28,10 @@ export async function run(): Promise<void> {
         message += ':white_check_mark: The schema is valid JSON.\n'
       } else {
         message +=
-          ':x: Validation of the schema failed!\n' + '```json\n' + JSON.stringify(ajv.errors) + '\n```\n'
+          ':x: Validation of the schema failed!\n' +
+          '```json\n' +
+          JSON.stringify(ajv.errors) +
+          '\n```\n'
       }
     } else {
       message +=

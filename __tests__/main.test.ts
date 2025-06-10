@@ -41,7 +41,7 @@ describe('main.ts', () => {
       1,
       'message',
       // Simple regex to match a time string in the format HH:MM:SS.
-      expect.stringMatching(/^JSON Schema Check Results/)
+      expect.stringMatching(/^# JSON Schema Check Results/)
     )
   })
   /*

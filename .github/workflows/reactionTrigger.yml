@@ -1,6 +1,11 @@
 on:
   issue_comment:
     types: [created, edited]
+
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -1,20 +1,21 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
-  "version": "0.0.0",
+  "name": "json-schema-check-action",
+  "description": "Action for checking JSON schema validity and compatibility.",
+  "version": "0.0.1",
   "author": "",
   "type": "module",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/kit-data-manager/json-schema-check-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/kit-data-manager/json-schema-check-action.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/kit-data-manager/json-schema-check-action/issues"
   },
   "keywords": [
-    "actions"
+    "actions",
+    "JSON"
   ],
   "exports": {
     ".": "./dist/index.js"

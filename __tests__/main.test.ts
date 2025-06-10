@@ -8,36 +8,43 @@
 // eslint-disable-next-line jest/no-commented-out-tests
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
+//import { InputOptions } from "@actions/core";
 
 // Mocks should be declared before the module being tested is imported.
 jest.unstable_mockModule('@actions/core', () => core)
 
 // The module being tested should be imported dynamically. This ensures that the
-// mocks are used in place of any actual dependencies.
-//const { run } = await import('../src/main.js')
+//mocks are used in place of any actual dependencies.
+const { run } = await import('../src/main.js')
 
 describe('main.ts', () => {
-  /*beforeEach(() => {
+  beforeEach(() => {
     // Set the action's inputs as return values from core.getInput().
-    core.getInput.mockImplementation(() => '500')
+    core.getInput.mockImplementation((name: string) => {
+      if (name === 'schemaPath') return 'schema.json'
+      else if (name === 'validate') return 'true'
+      else return 'true'
+    })
 
     // Mock the wait function so that it does not actually wait.
-    wait.mockImplementation(() => Promise.resolve('done!'))
+    //wait.mockImplementation(() => Promise.resolve('done!'))
   })
+
   afterEach(() => {
     jest.resetAllMocks()
   })
-  it('Sets the time output', async () => {
+  it('Sets the schema path', async () => {
     await run()
 
     // Verify the time output was set.
     expect(core.setOutput).toHaveBeenNthCalledWith(
       1,
-      'time',
+      'message',
       // Simple regex to match a time string in the format HH:MM:SS.
-      expect.stringMatching(/^\d{2}:\d{2}:\d{2}/)
+      expect.stringMatching(/^JSON Schema Check Results/)
     )
   })
+  /*
   it('Sets a failed status', async () => {
     // Clear the getInput mock and return an invalid value.
     core.getInput.mockClear().mockReturnValueOnce('this is not a number')

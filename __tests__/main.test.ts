@@ -6,31 +6,27 @@
  * so that the actual '@actions/core' module is not imported.
  */
 // eslint-disable-next-line jest/no-commented-out-tests
-/*import { jest } from '@jest/globals'
+import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
-import { wait } from '../__fixtures__/wait.js'
 
 // Mocks should be declared before the module being tested is imported.
 jest.unstable_mockModule('@actions/core', () => core)
-jest.unstable_mockModule('../src/wait.js', () => ({ wait }))
 
 // The module being tested should be imported dynamically. This ensures that the
 // mocks are used in place of any actual dependencies.
-const { run } = await import('../src/main.js')
+//const { run } = await import('../src/main.js')
 
 describe('main.ts', () => {
-  beforeEach(() => {
+  /*beforeEach(() => {
     // Set the action's inputs as return values from core.getInput().
     core.getInput.mockImplementation(() => '500')
 
     // Mock the wait function so that it does not actually wait.
     wait.mockImplementation(() => Promise.resolve('done!'))
   })
-
   afterEach(() => {
     jest.resetAllMocks()
   })
-
   it('Sets the time output', async () => {
     await run()
 
@@ -42,7 +38,6 @@ describe('main.ts', () => {
       expect.stringMatching(/^\d{2}:\d{2}:\d{2}/)
     )
   })
-
   it('Sets a failed status', async () => {
     // Clear the getInput mock and return an invalid value.
     core.getInput.mockClear().mockReturnValueOnce('this is not a number')
@@ -59,5 +54,5 @@ describe('main.ts', () => {
       1,
       'milliseconds is not a number'
     )
-  })
-})*/
+  })*/
+})

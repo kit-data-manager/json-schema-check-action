@@ -100,7 +100,3 @@ __tests__/runner/*
 # IDE files
 .idea
 *.code-workspace
-
-#dist folder
-dist
-schema.json

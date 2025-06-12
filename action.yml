@@ -16,13 +16,13 @@ inputs:
   validate:
     description: 'Validate the schema itself against the JSON specification'
     required: false
-    default: true
+    default: 'true'
   createDiff:
     description:
       'Tries to create a diff to the previous release. If none exist, this will
       be skipped.'
     required: false
-    default: true
+    default: 'true'
 outputs:
   message:
     description: 'The schema check output as markdown message.'

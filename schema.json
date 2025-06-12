@@ -1,7 +1,7 @@
 {
   "$id": "https://example.com/schemas/template.json",
   "title": "My Schema",
-  "type": "object12",
+  "type": "object",
   "properties": {
     "name": {
       "type": "string",

@@ -20,10 +20,14 @@ const { run } = await import('../src/main.js')
 describe('main.ts', () => {
   beforeEach(() => {
     // Set the action's inputs as return values from core.getInput().
+    core.getBooleanInput.mockImplementation((name: string) => {
+      if (name === 'validate') return true
+      else return name === 'createDiff'
+    })
+
     core.getInput.mockImplementation((name: string) => {
       if (name === 'schemaPath') return 'schema.json'
-      else if (name === 'validate') return 'true'
-      else return 'true'
+      return ''
     })
 
     // Mock the wait function so that it does not actually wait.

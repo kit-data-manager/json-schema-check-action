@@ -18,7 +18,7 @@ export async function run(): Promise<void> {
 
     const data: string = fs.readFileSync(schemaPath, 'utf8')
     const schema = JSON.parse(data)
-    console.log(schema)
+
     let validationErrors: boolean = false
     if (validate) {
       const succeed = ajv.validateSchema(schema, false)
@@ -72,5 +72,6 @@ export async function run(): Promise<void> {
     core.setOutput('message', message)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
+    else core.setFailed('Failed with unknown error. ' + error)
   }
 }

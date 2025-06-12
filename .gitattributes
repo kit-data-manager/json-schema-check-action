@@ -1,3 +1,5 @@
 * text=auto eol=lf
+dist/**/*.js text eol=lf
+dist/** text eol=lf
 
 dist/** -diff linguist-generated=true

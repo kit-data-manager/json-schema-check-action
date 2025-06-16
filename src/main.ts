@@ -22,8 +22,8 @@ export async function run(): Promise<void> {
       '### Validate JSON Schema\n' +
       '\n'
 
-    core.summary.addHeading('JSON Schema Check Results', 1)
-    core.summary.addHeading('Validate JSON Schema', 3)
+    //core.summary.addHeading('JSON Schema Check Results', 1)
+    //core.summary.addHeading('Validate JSON Schema', 3)
 
     core.info(`Reading schema file from ${schemaPath}`)
     const data: string = fs.readFileSync(schemaPath, 'utf8')
@@ -38,7 +38,7 @@ export async function run(): Promise<void> {
       if (succeed) {
         core.info('Schema validation succeeded.')
         message += ':white_check_mark: The schema is valid JSON.\n'
-        core.summary.addRaw(':white_check_mark: The schema is valid JSON.')
+        //core.summary.addRaw(':white_check_mark: The schema is valid JSON.')
       } else {
         core.error('Schema validation failed.')
         message +=
@@ -46,42 +46,48 @@ export async function run(): Promise<void> {
           '```json\n' +
           JSON.stringify(ajv.errors) +
           '\n```\n'
-        core.summary.addRaw(':x: Validation of the schema failed!')
+        //core.summary.addRaw(':x: Validation of the schema failed!')
       }
     } else {
       core.info('Skipping schema validation.')
       message +=
         ':grey_question: No information available as validation was not configured. \n'
       validationErrors = false
-      core.summary.addRaw(':grey_question: Schema validation skipped.')
+      //core.summary.addRaw(':grey_question: Schema validation skipped.')
     }
 
     message += '\n### Diff to Latest Release\n\n'
-    core.summary.addHeading('Diff to Latest Release', 3)
-    core.summary.addEOL()
+    //core.summary.addHeading('Diff to Latest Release', 3)
+    //core.summary.addEOL()
     if (diff) {
       core.info('Running diff to previous version.')
-      const content: string = await obtainLastVersion(schemaPath)
-      const diffResult: string = diffString(content, data, { color: false })
+      const content: string | undefined = await obtainLastVersion(schemaPath)
+      if (content) {
+        const diffResult: string = diffString(content, data, { color: false })
 
-      if (diffResult.length > 1000) {
-        core.warning(
-          'Difference is larger than 1000 characters. Diff formatting may be broken.'
-        )
+        console.log(diffResult)
+
+        if (diffResult.length > 1000) {
+          core.warning(
+            'Difference is larger than 1000 characters. Diff formatting may be broken.'
+          )
+        }
+
+        message += '```diff\n' + diffResult + '\n```\n\n'
+      } else {
+        message += '```diff\nNo previous schema version found.\n```\n\n'
       }
-
-      message += '```diff\n' + diffResult + '\n```\n\n'
-      core.summary.addRaw('```diff\n' + diffResult + '\n```\n\n')
+      //core.summary.addRaw('```diff\n' + diffResult + '\n```\n\n')
     } else {
       core.info('Diff skipped.')
       message +=
         ':grey_question: No information available as diff creation was not configured. \n'
-      core.summary.addRaw(':grey_question: Diff creation skipped.')
+      //core.summary.addRaw(':grey_question: Diff creation skipped.')
     }
 
     core.info('Finalizing output message.')
     message += '\n### Next Steps\n\n'
-    core.summary.addHeading('Next Steps', 3)
+    //core.summary.addHeading('Next Steps', 3)
 
     const list: Array<string> = []
 
@@ -106,6 +112,7 @@ export async function run(): Promise<void> {
     core.setOutput('message', message)
 
     core.info('Action succeeded.')
+    core.summary.addRaw(message)
     await core.summary.addList(list).write()
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
@@ -113,7 +120,9 @@ export async function run(): Promise<void> {
   }
 }
 
-async function obtainLastVersion(filename: string): Promise<string> {
+async function obtainLastVersion(
+  filename: string
+): Promise<string | undefined> {
   try {
     const token: string = core.getInput('github_token', { required: true })
     const filePath: string = filename
@@ -134,7 +143,7 @@ async function obtainLastVersion(filename: string): Promise<string> {
       core.warning(
         'No tags found in the repository. Returning empty previous version.'
       )
-      return ''
+      return undefined
     }
     core.info(`Latest tag: ${latestTag}`)
 
@@ -146,7 +155,7 @@ async function obtainLastVersion(filename: string): Promise<string> {
 
     if (!response.ok) {
       core.setFailed(`Failed to fetch previous version: ${response.statusText}`)
-      return ''
+      return undefined
     }
 
     return await response.text()
@@ -154,5 +163,5 @@ async function obtainLastVersion(filename: string): Promise<string> {
     if (error instanceof Error) core.setFailed(error.message)
     else core.setFailed('Failed with unknown error. ' + error)
   }
-  return ''
+  return undefined
 }

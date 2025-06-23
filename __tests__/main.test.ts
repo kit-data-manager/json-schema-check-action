@@ -5,7 +5,7 @@
  * functions and objects. For example, the core module is mocked in this test,
  * so that the actual '@actions/core' module is not imported.
  */
-// eslint-disable-next-line jest/no-commented-out-tests
+
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 //import { InputOptions } from "@actions/core";
@@ -48,22 +48,4 @@ describe('main.ts', () => {
       expect.stringMatching(/^# JSON Schema Check Results/)
     )
   })
-  /*
-  it('Sets a failed status', async () => {
-    // Clear the getInput mock and return an invalid value.
-    core.getInput.mockClear().mockReturnValueOnce('this is not a number')
-
-    // Clear the wait mock and return a rejected promise.
-    wait
-      .mockClear()
-      .mockRejectedValueOnce(new Error('milliseconds is not a number'))
-
-    await run()
-
-    // Verify that the action was marked as failed.
-    expect(core.setFailed).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds is not a number'
-    )
-  })*/
 })

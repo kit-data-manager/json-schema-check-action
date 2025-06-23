@@ -22,9 +22,6 @@ export async function run(): Promise<void> {
       '### Validate JSON Schema\n' +
       '\n'
 
-    //core.summary.addHeading('JSON Schema Check Results', 1)
-    //core.summary.addHeading('Validate JSON Schema', 3)
-
     core.info(`Reading schema file from ${schemaPath}`)
     const data: string = fs.readFileSync(schemaPath, 'utf8')
     core.info('Parsing schema.')
@@ -38,7 +35,6 @@ export async function run(): Promise<void> {
       if (succeed) {
         core.info('Schema validation succeeded.')
         message += ':white_check_mark: The schema is valid JSON.\n'
-        //core.summary.addRaw(':white_check_mark: The schema is valid JSON.')
       } else {
         core.error('Schema validation failed.')
         message +=
@@ -46,19 +42,15 @@ export async function run(): Promise<void> {
           '```json\n' +
           JSON.stringify(ajv.errors) +
           '\n```\n'
-        //core.summary.addRaw(':x: Validation of the schema failed!')
       }
     } else {
       core.info('Skipping schema validation.')
       message +=
         ':grey_question: No information available as validation was not configured. \n'
       validationErrors = false
-      //core.summary.addRaw(':grey_question: Schema validation skipped.')
     }
 
     message += '\n### Diff to Latest Release\n\n'
-    //core.summary.addHeading('Diff to Latest Release', 3)
-    //core.summary.addEOL()
     if (diff) {
       core.info('Running diff to previous version.')
       const content: string | undefined = await obtainLastVersion(schemaPath)
@@ -77,17 +69,14 @@ export async function run(): Promise<void> {
       } else {
         message += '```diff\nNo previous schema version found.\n```\n\n'
       }
-      //core.summary.addRaw('```diff\n' + diffResult + '\n```\n\n')
     } else {
       core.info('Diff skipped.')
       message +=
         ':grey_question: No information available as diff creation was not configured. \n'
-      //core.summary.addRaw(':grey_question: Diff creation skipped.')
     }
 
     core.info('Finalizing output message.')
     message += '\n### Next Steps\n\n'
-    //core.summary.addHeading('Next Steps', 3)
 
     const list: Array<string> = []
 

@@ -47,7 +47,9 @@ jobs:
   test-action:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      issues: write
     steps:
       - name: Checkout
         id: checkout
@@ -60,7 +62,7 @@ jobs:
           schemaPath: 'schema.json'
           createDiff: true
           validate: true
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
       - name: Print Output
         id: output
         run: echo "${{ steps.test-action.outputs.message }}"

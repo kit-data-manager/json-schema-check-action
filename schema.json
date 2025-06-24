@@ -12,7 +12,7 @@
       "description": "Your ORCiD URL if available."
     },
     "image": {
-      "type": "string1",
+      "type": "string",
       "description": "An image URL, preferably a picture of you, used later on for result rendering."
     },
     "title": {

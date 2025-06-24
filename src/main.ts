@@ -138,7 +138,7 @@ async function obtainLastVersion(
   filename: string
 ): Promise<string | undefined> {
   try {
-    const token: string = core.getInput('github_token', { required: true })
+    const token: string = core.getInput('token', { required: true })
     const filePath: string = filename
     const octokit = github.getOctokit(token)
     const { owner, repo } = github.context.repo

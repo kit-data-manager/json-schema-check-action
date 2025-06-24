@@ -23,6 +23,10 @@ inputs:
       be skipped.'
     required: false
     default: 'true'
+  token:
+    description:
+      'GitHub token for reading previous tags.'
+    required: true
 outputs:
   message:
     description: 'The schema check output as markdown message.'

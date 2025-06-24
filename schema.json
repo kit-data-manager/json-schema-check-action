@@ -34,9 +34,5 @@
       "maxLength": 256
     }
   },
-  "required": [
-    "name",
-    "title",
-    "rating"
-  ]
+  "required": ["name", "title", "rating"]
 }

@@ -14,8 +14,13 @@ const config = {
     sourcemap: true
   },
   plugins: [
-    typescript(),
-    nodeResolve({ preferBuiltins: true }),
+    typescript({
+      tsconfig: './tsconfig.json'
+    }),
+    nodeResolve({
+      preferBuiltins: true,
+      extensions: ['.js', '.ts']
+    }),
     commonjs(),
     json()
   ]

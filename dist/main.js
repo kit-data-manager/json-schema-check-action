@@ -1,166 +1,39 @@
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = run;
-const tslib_1 = require("tslib");
-const core = tslib_1.__importStar(require("@actions/core"));
-const json_diff_1 = require("json-diff");
-const ajv_1 = tslib_1.__importDefault(require("ajv"));
-const fs = tslib_1.__importStar(require("fs"));
-const github = tslib_1.__importStar(require("@actions/github"));
-const node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
-async function run() {
-    try {
-        const schemaPath = core.getInput('schemaPath');
-        const validate = core.getBooleanInput('validate');
-        const diff = core.getBooleanInput('createDiff');
-        core.info(`Checking schema path: ${schemaPath}`);
-        core.info(`Performing validate: ${validate}`);
-        core.info(`Performing diff: ${diff}`);
-        const ajv = new ajv_1.default();
-        let message = '# JSON Schema Check Results\n' +
-            '\n' +
-            '### Validate JSON Schema\n' +
-            '\n';
-        core.info(`Reading schema file from ${schemaPath}`);
-        const data = fs.readFileSync(schemaPath, {
-            encoding: 'utf8',
-            flag: 'r'
-        });
-        core.info('Parsing schema.');
-        const schemaParsed = JSON.parse(data);
-        let validationErrors = true;
-        let diffResult = '';
-        if (validate) {
-            core.info('Running schema validation.');
-            const succeed = ajv.validateSchema(schemaParsed, false);
-            if (succeed) {
-                core.info('Schema validation succeeded.');
-                message += ':white_check_mark: The schema is valid JSON.\n';
-                validationErrors = false;
-            }
-            else {
-                core.error('Schema validation failed.');
-                message +=
-                    ':x: Validation of the schema failed!\n' +
-                        '```json\n' +
-                        JSON.stringify(ajv.errors) +
-                        '\n```\n';
-                message +=
-                    '> [!TIP]\n' +
-                        '> To check and correct validation errors, you may use any online JSON schema validator, e.g., [jsonschemavalidator.net](https://www.jsonschemavalidator.net/).\n\n';
-            }
-        }
-        else {
-            core.info('Skipping schema validation.');
-            message +=
-                ':grey_question: No information available as validation was not configured. \n';
-            validationErrors = false;
-        }
-        message += '\n### Diff to Latest Release\n\n';
-        if (diff) {
-            core.info('Running diff to previous version.');
-            const previousData = await obtainLastVersion(schemaPath);
-            if (previousData) {
-                const previousSchemaParsed = JSON.parse(previousData);
-                diffResult = (0, json_diff_1.diffString)(previousSchemaParsed, schemaParsed, {
-                    color: false
-                });
-                if (diffResult.length == 0) {
-                    core.info('No difference found to previous version.');
-                    message +=
-                        '```diff\nNo difference found to previous version.\n```\n\n';
-                }
-                else {
-                    core.info(diffResult);
-                    if (diffResult.length > 1000) {
-                        core.warning('Difference is larger than 1000 characters. Diff formatting may be broken.');
-                    }
-                    message += '```diff\n' + diffResult + '\n```\n\n';
-                    message +=
-                        '> [!TIP]\n' +
-                            '> To check schema backwards compatibility, you may use any AI provider with a prompt like:\n' +
-                            '> \n' +
-                            '>   **Assuming I have two JSON schemas, both are different according to the following diff, are both schemas compatible?\n' +
-                            '>   <PASTE_DIFF_HERE>**\n' +
-                            '>\n' +
-                            '> If you like, you may add additional rendering instructions, e.g.:\n' +
-                            '>\n' +
-                            '> **Render the result as table showing the changed attributes, a columns to check backward compatibility, ' +
-                            '> and a column to provide comments on why a certain property is not backwards compatible.**\n';
-                }
-            }
-            else {
-                message += '```diff\nNo previous schema version found.\n```\n\n';
-            }
-        }
-        else {
-            core.info('Diff skipped.');
-            message +=
-                ':grey_question: No information available as diff creation was not configured. \n';
-        }
-        core.info('Finalizing output message.');
-        message += '\n### Next Steps\n\n';
-        if (validationErrors) {
-            message += '- [ ] Fix validation errors\n';
-        }
-        else {
-            message += '- [X] Fix validation errors\n';
-        }
-        if (diff) {
-            message += '- [ ] Check backwards compatibility based on diff\n';
-        }
-        else {
-            message += '- [X] Check backwards compatibility based on diff\n';
-        }
-        message += '- [ ] React with :thumbsup: to mark the PR as ready';
-        message += '\n\n';
-        core.info('Setting output message.');
-        core.setOutput('message', message);
-        core.info('Action succeeded.');
-        await core.summary.addRaw(message).write();
-    }
-    catch (error) {
-        if (error instanceof Error)
-            core.setFailed(error.message);
-        else
-            core.setFailed('Failed with unknown error. ' + error);
-    }
-}
-async function obtainLastVersion(filename) {
-    try {
-        const token = core.getInput('github_token', { required: true });
-        const filePath = filename;
-        const octokit = github.getOctokit(token);
-        const { owner, repo } = github.context.repo;
-        core.info(`Obtaining tags for repo ${owner}/${repo}`);
-        // Step 1: Get the latest tag
-        const tagsResponse = await octokit.rest.repos.listTags({
-            owner,
-            repo,
-            per_page: 1
-        });
-        core.info(`Received ${tagsResponse.data.length} tags.`);
-        const latestTag = tagsResponse.data[0]?.name;
-        if (!latestTag) {
-            core.warning('No tags found in the repository. Returning empty previous version.');
-            return undefined;
-        }
-        core.info(`Latest tag: ${latestTag}`);
-        // Step 2: Construct URL to fetch the file from the tag
-        const fileUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${latestTag}/${filePath}`;
-        core.info(`Fetching previous version from: ${fileUrl}`);
-        const response = await (0, node_fetch_1.default)(fileUrl);
-        if (!response.ok) {
-            core.setFailed(`Failed to fetch previous version: ${response.statusText}`);
-            return undefined;
-        }
-        return await response.text();
-    }
-    catch (error) {
-        if (error instanceof Error)
-            core.setFailed(error.message);
-        else
-            core.setFailed('Failed with unknown error. ' + error);
-    }
-    return undefined;
-}
+export { r as run } from './main-DJrXj0SL.js';
+import 'fs';
+import 'os';
+import 'crypto';
+import 'path';
+import 'http';
+import 'https';
+import 'net';
+import 'tls';
+import 'events';
+import 'assert';
+import 'util';
+import 'stream';
+import 'buffer';
+import 'querystring';
+import 'stream/web';
+import 'node:stream';
+import 'node:util';
+import 'node:events';
+import 'worker_threads';
+import 'perf_hooks';
+import 'util/types';
+import 'async_hooks';
+import 'console';
+import 'url';
+import 'zlib';
+import 'string_decoder';
+import 'diagnostics_channel';
+import 'child_process';
+import 'timers';
+import 'node:http';
+import 'node:https';
+import 'node:zlib';
+import 'node:buffer';
+import 'node:url';
+import 'node:net';
+import 'node:fs';
+import 'node:path';
 //# sourceMappingURL=main.js.map

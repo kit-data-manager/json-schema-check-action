@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sources":["../src/index.ts"],"sourcesContent":["/**\n * The entrypoint for the action. This file simply imports and runs the action's\n * main logic.\n */\nimport { run } from './main.js'\n\n/* istanbul ignore next */\nrun()\n"],"names":[],"mappings":";AAAA;;;AAGG;AACH,MAA+B,SAAA,GAAA,OAAA,CAAA,WAAA,CAAA;AAE/B;AACA,IAAA,SAAA,CAAA,GAAG,GAAE"}
+{"version":3,"file":"index.js","sources":["../src/index.ts"],"sourcesContent":[null],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAGG;AAGH;AACA,GAAG,EAAE"}

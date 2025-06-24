@@ -23,18 +23,24 @@ export async function run(): Promise<void> {
       '\n'
 
     core.info(`Reading schema file from ${schemaPath}`)
-    const data: string = fs.readFileSync(schemaPath, 'utf8')
+    const data: string = fs.readFileSync(schemaPath, {
+      encoding: 'utf8',
+      flag: 'r'
+    })
     core.info('Parsing schema.')
-    const schema = JSON.parse(data)
+    const schemaParsed = JSON.parse(data)
 
-    let validationErrors: boolean = false
+    let validationErrors: boolean = true
+    let diffResult: string = ''
+
     if (validate) {
       core.info('Running schema validation.')
-      const succeed = ajv.validateSchema(schema, false)
+      const succeed = ajv.validateSchema(schemaParsed, false)
 
       if (succeed) {
         core.info('Schema validation succeeded.')
         message += ':white_check_mark: The schema is valid JSON.\n'
+        validationErrors = false
       } else {
         core.error('Schema validation failed.')
         message +=
@@ -42,6 +48,9 @@ export async function run(): Promise<void> {
           '```json\n' +
           JSON.stringify(ajv.errors) +
           '\n```\n'
+        message +=
+          '> [!TIP]\n' +
+          '> To check and correct validation errors, you may use any online JSON schema validator, e.g., [jsonschemavalidator.net](https://www.jsonschemavalidator.net/).\n\n'
       }
     } else {
       core.info('Skipping schema validation.')
@@ -53,19 +62,41 @@ export async function run(): Promise<void> {
     message += '\n### Diff to Latest Release\n\n'
     if (diff) {
       core.info('Running diff to previous version.')
-      const content: string | undefined = await obtainLastVersion(schemaPath)
-      if (content) {
-        const diffResult: string = diffString(content, data, { color: false })
+      const previousData: string | undefined =
+        await obtainLastVersion(schemaPath)
 
-        console.log(diffResult)
+      if (previousData) {
+        const previousSchemaParsed = JSON.parse(previousData)
+        diffResult = diffString(previousSchemaParsed, schemaParsed, {
+          color: false
+        })
 
-        if (diffResult.length > 1000) {
-          core.warning(
-            'Difference is larger than 1000 characters. Diff formatting may be broken.'
-          )
+        if (diffResult.length == 0) {
+          core.info('No difference found to previous version.')
+          message +=
+            '```diff\nNo difference found to previous version.\n```\n\n'
+        } else {
+          core.info(diffResult)
+
+          if (diffResult.length > 1000) {
+            core.warning(
+              'Difference is larger than 1000 characters. Diff formatting may be broken.'
+            )
+          }
+
+          message += '```diff\n' + diffResult + '\n```\n\n'
+          message +=
+            '> [!TIP]\n' +
+            '> To check schema backwards compatibility, you may use any AI provider with a prompt like:\n' +
+            '> \n' +
+            '>   **Assuming I have two JSON schemas, both are different according to the following diff, are both schemas compatible?\n' +
+            '>   <PASTE_DIFF_HERE>**\n' +
+            '>\n' +
+            '> If you like, you may add additional rendering instructions, e.g.:\n' +
+            '>\n' +
+            '> **Render the result as table showing the changed attributes, a columns to check backward compatibility, ' +
+            '> and a column to provide comments on why a certain property is not backwards compatible.**\n'
         }
-
-        message += '```diff\n' + diffResult + '\n```\n\n'
       } else {
         message += '```diff\nNo previous schema version found.\n```\n\n'
       }
@@ -78,31 +109,25 @@ export async function run(): Promise<void> {
     core.info('Finalizing output message.')
     message += '\n### Next Steps\n\n'
 
-    const list: Array<string> = []
-
     if (validationErrors) {
       message += '- [ ] Fix validation errors\n'
-      list.push('[ ] Fix validation errors')
     } else {
       message += '- [X] Fix validation errors\n'
-      list.push('[X] Fix validation errors')
     }
 
     if (diff) {
       message += '- [ ] Check backwards compatibility based on diff\n'
-      list.push('[ ] Check backwards compatibility based on diff')
     } else {
       message += '- [X] Check backwards compatibility based on diff\n'
-      list.push('[X] Check backwards compatibility based on diff')
     }
     message += '- [ ] React with :thumbsup: to mark the PR as ready'
-    list.push('[ ] React with :thumbsup: to mark the PR as ready')
+    message += '\n\n'
+
     core.info('Setting output message.')
     core.setOutput('message', message)
 
     core.info('Action succeeded.')
-    core.summary.addRaw(message)
-    await core.summary.addList(list).write()
+    await core.summary.addRaw(message).write()
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
     else core.setFailed('Failed with unknown error. ' + error)

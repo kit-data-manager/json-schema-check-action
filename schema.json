@@ -5,14 +5,14 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "user name"
+      "description": "Name of the user."
     },
     "orcid": {
       "type": "string",
       "description": "Your ORCiD URL if available."
     },
     "image": {
-      "type": "string",
+      "type": "string1",
       "description": "An image URL, preferably a picture of you, used later on for result rendering."
     },
     "title": {
@@ -23,16 +23,20 @@
     },
     "rating": {
       "type": "integer",
-      "description": "Workshop rating from 1 to 5",
+      "description": "Workshop rating from 0 to 5",
       "default": 3,
-      "minimum": 1,
+      "minimum": 0,
       "maximum": 5
     },
     "feedback": {
       "type": "string",
       "description": "A short feedback on what you liked most/less or on what could be improved.",
-      "maxLength": 512
+      "maxLength": 256
     }
   },
-  "required": ["name", "title", "rating"]
+  "required": [
+    "name",
+    "title",
+    "rating"
+  ]
 }

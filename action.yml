@@ -24,8 +24,7 @@ inputs:
     required: false
     default: 'true'
   token:
-    description:
-      'GitHub token for reading previous tags.'
+    description: 'GitHub token for reading previous tags.'
     required: true
 outputs:
   message:

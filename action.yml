@@ -3,16 +3,19 @@ description:
   Check a given JSON schema file in the repository for being valid and for
   differences to the previous release.
 author: Thomas Jejkal
-
-# Add your action's branding here. This will appear on the GitHub Marketplace.
-#branding:
-#  icon: heart
-#  color: red
+branding:
+  icon: check-square
+  color: gray-dark
 
 inputs:
   schemaPath:
     description: 'Relative path of the schema file to check'
     required: true
+  schemaVersion:
+    description: 'JSON schema version to use for validating the schema. Available options are draft-07 (default), 2019,
+    and 2020.'
+    required: false
+    default: 'draft-07'
   validate:
     description: 'Validate the schema itself against the JSON specification'
     required: false

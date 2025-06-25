@@ -1,6 +1,8 @@
 import * as core from '@actions/core'
 import { diffString } from 'json-diff'
 import Ajv from 'ajv'
+import Ajv2019 from 'ajv'
+import Ajv2020 from 'ajv'
 import * as fs from 'fs'
 import * as github from '@actions/github'
 import fetch from 'node-fetch'
@@ -10,11 +12,20 @@ export async function run(): Promise<void> {
     const schemaPath: string = core.getInput('schemaPath')
     const validate: boolean = core.getBooleanInput('validate')
     const diff: boolean = core.getBooleanInput('createDiff')
+    const schemaVersion: string = core.getInput('schemaVersion')
+
     core.info(`Checking schema path: ${schemaPath}`)
     core.info(`Performing validate: ${validate}`)
     core.info(`Performing diff: ${diff}`)
 
-    const ajv = new Ajv()
+    let ajv = undefined
+    if (schemaVersion === '2019') {
+      ajv = new Ajv2019()
+    } else if (schemaVersion === '2020') {
+      ajv = new Ajv2020()
+    } else {
+      ajv = new Ajv()
+    }
 
     let message: string =
       '# JSON Schema Check Results\n' +

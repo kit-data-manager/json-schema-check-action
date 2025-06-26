@@ -110,13 +110,13 @@ a result, you'll see the following summary after each action run:
 
 ---
 
-# JSON Schema Check Results
+## JSON Schema Check Results
 
-### Validate JSON Schema
+#### Validate JSON Schema
 
 :white_check_mark: The schema is valid JSON.
 
-### Diff to Latest Release
+#### Diff to Latest Release
 
 ```diff
  {

@@ -116,8 +116,7 @@ export async function run(): Promise<void> {
       message +=
         ':grey_question: No information available as diff creation was not configured. \n'
     }
-    core.info('Setting action summary.')
-    await core.summary.addRaw(message).write()
+    const summary: string = message
     core.info('Finalizing output message.')
     message += '\n### Next Steps\n\n'
 
@@ -137,6 +136,8 @@ export async function run(): Promise<void> {
 
     core.info('Setting output message.')
     core.setOutput('message', message)
+    core.info('Setting action summary.')
+    await core.summary.addRaw(summary).write()
     core.info('Action succeeded.')
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)

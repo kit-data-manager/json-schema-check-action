@@ -98,7 +98,7 @@ export async function run(): Promise<void> {
           message += '```diff\n' + diffResult + '\n```\n\n'
           message +=
             '> [!TIP]\n' +
-            '> To check schema backwards compatibility, you may use any AI provider with a prompt like:\n' +
+            '> To check schema backwards compatibility, you may use any AI chatbot with a prompt like:\n' +
             '> \n' +
             '>   **Assuming I have two JSON schemas, both are different according to the following diff, are both schemas compatible?\n' +
             '>   <PASTE_DIFF_HERE>**\n' +
@@ -106,7 +106,11 @@ export async function run(): Promise<void> {
             '> If you like, you may add additional rendering instructions, e.g.:\n' +
             '>\n' +
             '> **Render the result as table showing the changed attributes, a columns to check backward compatibility, ' +
-            '> and a column to provide comments on why a certain property is not backwards compatible.**\n'
+            '> and a column to provide comments on why a certain property is not backwards compatible.**\n' +
+            '>\n' +
+            '> Furthermore, you can also use the diff to get a hint on which schema version to use next:\n' +
+            '>    **Assuming I have a JSON schema in version 1.0.0 and the next version has the following changes in diff format. Which would be the next version number following semantic versioning principles?\n' +
+            '>   <PASTE_DIFF_HERE>**\n'
         }
       } else {
         message += '```diff\nNo previous schema version found.\n```\n\n'

@@ -48,6 +48,7 @@ on:
     branches: [main]
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -67,11 +68,12 @@ on:
     branches: [main]
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: JSON Schema Check
-        used: actions/json-schema-check-action@v0.0.1
+        uses: kit-data-manager/json-schema-check-action@v0.0.1
         with:
           schemaPath: 'schema.json'
           schemaVersion: 'draft-07'

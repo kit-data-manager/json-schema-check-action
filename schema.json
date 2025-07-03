@@ -3,9 +3,9 @@
   "title": "My Schema",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "Name of the user."
+    "person": {
+      "$ref": "modules/person.json",
+      "description": "A person with firstname, lastname, and title."
     },
     "orcid": {
       "type": "string",

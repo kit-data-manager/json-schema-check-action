@@ -1,0 +1,20 @@
+{
+  "$id": "https://example.com/schemas/person.json",
+  "type": "object",
+  "title": "Person",
+  "properties": {
+    "firstname": {
+      "type": "string",
+      "description": "The person's first name."
+    },
+    "lastname": {
+      "type": "string",
+      "description": "The person's last name."
+    },
+    "title": {
+      "type": "string",
+      "description": "The person's professional or academic title (e.g., Dr., Prof.)."
+    }
+  },
+  "required": ["firstname", "lastname"]
+}

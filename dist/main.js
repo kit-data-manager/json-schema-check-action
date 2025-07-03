@@ -1,8 +1,9 @@
-export { r as run } from './main-CrwkRKGQ.js';
-import 'fs';
+export { r as run } from './main-CUT-wIpH.js';
+import 'path';
+import 'fs/promises';
 import 'os';
 import 'crypto';
-import 'path';
+import 'fs';
 import 'http';
 import 'https';
 import 'net';

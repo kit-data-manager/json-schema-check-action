@@ -191,7 +191,7 @@ async function obtainLastVersion(): Promise<string | undefined> {
     core.info(`Latest tag: ${latestTag}`)
 
     // Step 2: Construct URL to fetch the file from the tag
-    const fileUrl: string = `https://github.com/${owner}/${repo}/releases/download/${latestTag}/bundled_${latestTag}.json`
+    const fileUrl: string = `https://github.com/${owner}/${repo}/releases/download/${latestTag}/bundled-${latestTag}.json`
     core.info(`Fetching previous version from: ${fileUrl}`)
 
     const response = await fetch(fileUrl)

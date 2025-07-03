@@ -73,7 +73,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: JSON Schema Check
-        uses: kit-data-manager/json-schema-check-action@v0.0.1
+        uses: kit-data-manager/json-schema-check-action@v0.0.4
         with:
           schemaPath: 'schema.json'
           schemaVersion: 'draft-07'

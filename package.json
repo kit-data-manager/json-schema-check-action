@@ -1,7 +1,7 @@
 {
   "name": "json-schema-check-action",
   "description": "Action for checking JSON schema validity and compatibility.",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "author": "",
   "private": true,
   "homepage": "https://github.com/kit-data-manager/json-schema-check-action",

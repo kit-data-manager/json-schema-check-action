@@ -16,19 +16,21 @@ export async function run(): Promise<void> {
     const { eventName, payload } = github.context
     if (eventName === 'release' && payload.action === 'published') {
       //only run on release.published trigger
+      const tagName: string = github.context.payload.release.tag_name
+      const filename: string = `bundled-${tagName}.json`
       const token: string = core.getInput('token', { required: true })
       try {
         core.info(`Reading schema file from ${schemaPath}`)
         const data: object = await bundleJson(schemaPath)
         const json = JSON.stringify(data, null, 2)
-        core.info(`Writing schema file to bundled.json`)
-        await writeFile('bundled.json', json, 'utf-8')
-        core.info(`✅ JSON saved to bundled.json`)
+        core.info(`Writing schema file to ${filename}`)
+        await writeFile(filename, json, 'utf-8')
+        core.info(`✅ JSON saved to ${filename}`)
       } catch (error) {
         core.error(`❌ Failed to write JSON: ${(error as Error).message}`)
       }
-      core.info(`Uploading schema file from bundled.json`)
-      await upload('bundled.json', token)
+      core.info(`Uploading schema file ${filename} as release asset.`)
+      await upload(filename, token)
     } else {
       const validate: boolean = core.getBooleanInput('validate')
       const diff: boolean = core.getBooleanInput('createDiff')
@@ -88,8 +90,7 @@ export async function run(): Promise<void> {
       message += '\n### Diff to Latest Release\n\n'
       if (diff) {
         core.info('Running diff to previous version.')
-        const previousData: string | undefined =
-          await obtainLastVersion(schemaPath)
+        const previousData: string | undefined = await obtainLastVersion()
 
         if (previousData) {
           const previousSchemaParsed = JSON.parse(previousData)
@@ -165,12 +166,9 @@ export async function run(): Promise<void> {
   }
 }
 
-async function obtainLastVersion(
-  filename: string
-): Promise<string | undefined> {
+async function obtainLastVersion(): Promise<string | undefined> {
   try {
     const token: string = core.getInput('token', { required: true })
-    const filePath: string = filename
     const octokit = github.getOctokit(token)
     const { owner, repo } = github.context.repo
 
@@ -193,7 +191,7 @@ async function obtainLastVersion(
     core.info(`Latest tag: ${latestTag}`)
 
     // Step 2: Construct URL to fetch the file from the tag
-    const fileUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${latestTag}/${filePath}`
+    const fileUrl: string = `https://github.com/${owner}/${repo}/releases/download/${latestTag}/bundled_${latestTag}.json`
     core.info(`Fetching previous version from: ${fileUrl}`)
 
     const response = await fetch(fileUrl)

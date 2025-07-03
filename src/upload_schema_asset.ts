@@ -26,15 +26,8 @@ export async function upload(filePath: string, token: string) {
       body: fileData
     })
 
-    //if (!response.ok) {
-    //  const errorBody = await response.text()
-    //  throw new Error(
-    //    `Failed to upload asset: ${response.status} ${response.statusText}\n${errorBody}`
-    //  )
-    //}
-
     const result: number = response.status
-    if (result === 200) {
+    if (result === 201) {
       core.info(`✅ Asset uploaded succeeded`)
     } else {
       core.error(`❌ Asset uploaded failed with status ${result}`)

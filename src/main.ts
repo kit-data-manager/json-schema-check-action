@@ -197,14 +197,14 @@ async function obtainLastVersion(): Promise<string | undefined> {
     const response = await fetch(fileUrl)
 
     if (!response.ok) {
-      core.setFailed(`Failed to fetch previous version: ${response.statusText}`)
+      core.warning(`Failed to fetch previous version: ${response.statusText}`)
       return undefined
     }
 
     return await response.text()
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
-    else core.setFailed('Failed with unknown error. ' + error)
+    else core.warning('Failed with unknown error. ' + error)
   }
   return undefined
 }

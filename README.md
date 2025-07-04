@@ -93,22 +93,44 @@ mandatory and others are options. Details can be found in the following table.
 | createDiff    | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                        | :x:                | true     |
 | token         | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_. | :x:                | -        |
 
-For the token argument you should typically use the value
-_${{ secrets.GITHUB_TOKEN }}_, as this is the automatically generated token
-intended to be used in CI workflows.
-
-Alternatively, you can use your own token. Details on how to create GitHub
-access tokens can be
-[found here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-For our purposes, **read** permissions to contents will be sufficient. Once
-created, you have to make the created GitHub access token available to your
-workflow actions. Details on how to do this can be
-[found here](https://docs.github.com/de/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions).
-Afterward, you can use your token via _${{ secrets.YOUR_TOKEN_NAME }}_.
-
 If configured correctly, the action will now run on each build for pull requests
-to the main branch. You may modify the configuration according to your needs. As
-a result, you'll see the following summary after each action run:
+to the main branch. You may modify the configuration according to your needs.
+For the first run, i.e., if your schema is not released, yet, you'll see a
+message in the diff report, that no previous version could be obtained. In order
+to allow the action to obtain it for an existing release, another CI workflow is
+needed:
+
+```yaml
+name: Run on New Release
+
+on:
+  release:
+    types: [published] # Triggers only when a release is published
+
+jobs:
+  on-release-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: JSON Schema Check
+        uses: kit-data-manager/json-schema-check-action@v0.0.4
+        with:
+          schemaPath: 'schema.json'
+          token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+As you can see, the action can also be used on another trigger, which is the
+publication of a new release. The purpose of this workflow is to publish the
+schema as release artifact, such that it can be accessed directly instead of
+checking out the code of a tagged version. Another advantage is, that this
+action call creates a bundled schema, i.e., it resolves $ref elements in the
+schema file, which could also be helpful for the schema applicability as some
+tools cannot work with $refs very well. As a result, your release will contain a
+file _bundled-<TAG>.json_, which is expected by this action for creating the
+diff to the previous release. If the file was found, i.e., if at least one
+release exists which has a file _bundled-<TAG>.json_ attached, you'll see the
+following summary after each action run:
 
 ---
 
@@ -170,6 +192,21 @@ compatibility, while all other changes keep compatibility. As a result, you may
 offer some kind of migration or mapping between the previous schema version and
 the new version and according to semantic versioning rules, the next version
 will be a major release.
+
+### Using a custom token
+
+For the token argument you should typically use the value
+_${{ secrets.GITHUB_TOKEN }}_, as this is the automatically generated token
+intended to be used in CI workflows.
+
+Alternatively, you can use your own token. Details on how to create GitHub
+access tokens can be
+[found here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+For our purposes, **read** permissions to contents will be sufficient. Once
+created, you have to make the created GitHub access token available to your
+workflow actions. Details on how to do this can be
+[found here](https://docs.github.com/de/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions).
+Afterward, you can use your token via _${{ secrets.YOUR_TOKEN_NAME }}_.
 
 ## License
 

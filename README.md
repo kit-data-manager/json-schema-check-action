@@ -89,7 +89,7 @@ mandatory and others are options. Details can be found in the following table.
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | -------- |
 | schemaPath    | The relative path where the schema is located in the repository.                                                                                | :white_check_mark: | -        |
 | schemaVersion | The version of the schema required for validation. Supported versions are draft-07, 2019, and 2020.                                             | :x:                | draft-07 |
-| validate      | Enabled or disables validation of the schema. Supported calues are _true_ or _false_.                                                           | :x:                | true     |
+| validate      | Enabled or disables validation of the schema. Supported values are _true_ or _false_.                                                           | :x:                | true     |
 | createDiff    | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                        | :x:                | true     |
 | token         | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_. | :x:                | -        |
 

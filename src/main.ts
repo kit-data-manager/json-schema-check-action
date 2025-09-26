@@ -169,26 +169,27 @@ export async function run(): Promise<void> {
 async function obtainLastVersion(): Promise<string | undefined> {
   try {
     const token: string = core.getInput('token', { required: true })
-    const octokit = github.getOctokit(token)
+    let latestTag: string = core.getInput('previousVersion')
     const { owner, repo } = github.context.repo
 
-    core.info(`Obtaining tags for repo ${owner}/${repo}`)
-    // Step 1: Get the latest tag
-    const tagsResponse = await octokit.rest.repos.listTags({
-      owner,
-      repo,
-      per_page: 1
-    })
-
-    core.info(`Received ${tagsResponse.data.length} tags.`)
-    const latestTag = tagsResponse.data[0]?.name
     if (!latestTag) {
-      core.warning(
-        'No tags found in the repository. Returning empty previous version.'
-      )
-      return undefined
+      const octokit = github.getOctokit(token)
+      core.info(`Obtaining tags for repo ${owner}/${repo}`)
+      // Step 1: Get the latest tag
+      const { data } = await octokit.rest.repos.getLatestRelease({
+        owner,
+        repo
+      })
+
+      latestTag = data.tag_name
+      if (!latestTag) {
+        core.warning(
+          'No tags found in the repository. Returning empty previous version.'
+        )
+        return undefined
+      }
+      core.info(`Latest tag: ${latestTag}`)
     }
-    core.info(`Latest tag: ${latestTag}`)
 
     // Step 2: Construct URL to fetch the file from the tag
     const fileUrl: string = `https://github.com/${owner}/${repo}/releases/download/${latestTag}/bundled-${latestTag}.json`

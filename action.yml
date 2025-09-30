@@ -30,6 +30,9 @@ inputs:
   token:
     description: 'GitHub token for reading previous tags.'
     required: false
+  previousVersion:
+    description: 'The previous version/tag name to apply the diff against.'
+    required: false
 outputs:
   message:
     description: 'The schema check output as markdown message.'

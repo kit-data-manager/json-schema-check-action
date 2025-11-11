@@ -52,10 +52,10 @@ export async function run(): Promise<void> {
       core.info(`$schema property from input: ${schemaUrl}`)
 
       let ajv = undefined
-      if (schemaUrl === 'http://json-schema.org/draft/2019-09/schema') {
+      if (schemaUrl === 'https://json-schema.org/draft/2019-09/schema') {
         core.info(`Using Ajv2019`)
         ajv = new Ajv2019()
-      } else if (schemaUrl === 'http://json-schema.org/draft/2020-12/schema') {
+      } else if (schemaUrl === 'https://json-schema.org/draft/2020-12/schema') {
         core.info(`Using Ajv2020`)
         ajv = new Ajv2020()
       } else {

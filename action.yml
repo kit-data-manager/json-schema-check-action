@@ -11,12 +11,6 @@ inputs:
   schemaPath:
     description: 'Relative path of the schema file to check'
     required: true
-  schemaVersion:
-    description:
-      'JSON schema version to use for validating the schema. Available options
-      are draft-07 (default), 2019, and 2020.'
-    required: false
-    default: 'draft-07'
   validate:
     description: 'Validate the schema itself against the JSON specification'
     required: false

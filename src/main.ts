@@ -1,8 +1,7 @@
 import * as core from '@actions/core'
 import { diffString } from 'json-diff'
-import Ajv from 'ajv'
-import Ajv2019 from 'ajv'
-import Ajv2020 from 'ajv'
+import Ajv2019 from 'ajv/dist/2019'
+import Ajv2020 from 'ajv/dist/2020'
 import * as github from '@actions/github'
 import fetch from 'node-fetch'
 import * as $RefParser from '@apidevtools/json-schema-ref-parser'
@@ -34,20 +33,10 @@ export async function run(): Promise<void> {
     } else {
       const validate: boolean = core.getBooleanInput('validate')
       const diff: boolean = core.getBooleanInput('createDiff')
-      const schemaVersion: string = core.getInput('schemaVersion')
 
       core.info(`Checking schema path: ${schemaPath}`)
       core.info(`Performing validate: ${validate}`)
       core.info(`Performing diff: ${diff}`)
-
-      let ajv = undefined
-      if (schemaVersion === '2019') {
-        ajv = new Ajv2019()
-      } else if (schemaVersion === '2020') {
-        ajv = new Ajv2020()
-      } else {
-        ajv = new Ajv()
-      }
 
       let message: string =
         '# JSON Schema Check Results\n' +
@@ -58,6 +47,24 @@ export async function run(): Promise<void> {
       core.info(`Reading schema file from ${schemaPath}`)
       const data: object = await bundleJson(schemaPath)
 
+      //@ts-expect-error(data is of type any)
+      const schemaUrl: string = data['$schema']
+      core.info(`$schema property from input: ${schemaUrl}`)
+
+      let ajv = undefined
+      if (schemaUrl === 'http://json-schema.org/draft/2019-09/schema') {
+        core.info(`Using Ajv2019`)
+        ajv = new Ajv2019()
+      } else if (schemaUrl === 'http://json-schema.org/draft/2020-12/schema') {
+        core.info(`Using Ajv2020`)
+        ajv = new Ajv2020()
+      } else {
+        core.info(`Using Ajv`)
+        ajv = new Ajv2019()
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const draft7MetaSchema = require('ajv/dist/refs/json-schema-draft-07.json')
+        ajv.addMetaSchema(draft7MetaSchema)
+      }
       let validationErrors: boolean = true
       let diffResult: string = ''
 

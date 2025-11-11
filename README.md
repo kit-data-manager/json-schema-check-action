@@ -73,10 +73,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: JSON Schema Check
-        uses: kit-data-manager/json-schema-check-action@v0.0.4
+        uses: kit-data-manager/json-schema-check-action@v0.0.7
         with:
           schemaPath: 'schema.json'
-          schemaVersion: 'draft-07'
           validate: true
           createDiff: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -85,17 +84,25 @@ jobs:
 As you can see, there are a couple of arguments, where some of them are
 mandatory and others are options. Details can be found in the following table.
 
-| Argument        | Description                                                                                                                                                                                                                                                                                                | Mandatory          | Default  |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | -------- |
-| schemaPath      | The relative path where the schema is located in the repository.                                                                                                                                                                                                                                           | :white_check_mark: | -        |
-| schemaVersion   | The version of the schema required for validation. Supported versions are draft-07, 2019, and 2020.                                                                                                                                                                                                        | :x:                | draft-07 |
-| validate        | Enabled or disables validation of the schema. Supported values are _true_ or _false_.                                                                                                                                                                                                                      | :x:                | true     |
-| createDiff      | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                                                                                                                                                                                   | :x:                | true     |
-| token           | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_.                                                                                                                                                            | :x:                | -        |
-| previousVersion | The previous version/tag name to apply the diff against. This argument's value must be determined in an upstream action and should have a variable name as value, e.g., ${{ steps.determine-previous-version.outputs.version }}. Using this argument is only recommended for experts and in special cases. | :x:                | -        |
+| Argument        | Description                                                                                                                                                                                                                                                                                                | Mandatory          | Default |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------- |
+| schemaPath      | The relative path where the schema is located in the repository.                                                                                                                                                                                                                                           | :white_check_mark: | -       |
+| validate        | Enabled or disables validation of the schema. Supported values are _true_ or _false_.                                                                                                                                                                                                                      | :x:                | true    |
+| createDiff      | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                                                                                                                                                                                   | :x:                | true    |
+| token           | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_.                                                                                                                                                            | :x:                | -       |
+| previousVersion | The previous version/tag name to apply the diff against. This argument's value must be determined in an upstream action and should have a variable name as value, e.g., ${{ steps.determine-previous-version.outputs.version }}. Using this argument is only recommended for experts and in special cases. | :x:                | -       |
 
 If configured correctly, the action will now run on each build for pull requests
 to the main branch. You may modify the configuration according to your needs.
+
+> [!IMPORTANT]  
+> The action automatically selects the schema validator based on the URL given
+> by the _$schema_ attribute. Currently, schema version draft-07, 2019-09, and
+> 2020-12 are supported. While for 2019-09 and 2020-12 the https schema URLs are
+> supported by the validator, for using schema draft-07 _$schema_ must be set to
+> **https://json-schema.org/draft-07/schema**. If no _$schema_ attribute is
+> found, the draft-07 validator is used.
+
 For the first run, i.e., if your schema is not released, yet, you'll see a
 message in the diff report, that no previous version could be obtained. In order
 to allow the action to obtain it for an existing release, another CI workflow is

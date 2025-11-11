@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import { diffString } from 'json-diff'
 import Ajv2019 from 'ajv/dist/2019'
 import Ajv2020 from 'ajv/dist/2020'
+import Draft07Schema from 'ajv/dist/refs/json-schema-draft-07.json'
 import * as github from '@actions/github'
 import fetch from 'node-fetch'
 import * as $RefParser from '@apidevtools/json-schema-ref-parser'
@@ -61,9 +62,7 @@ export async function run(): Promise<void> {
       } else {
         core.info(`Using Ajv`)
         ajv = new Ajv2019()
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const draft7MetaSchema = require('ajv/dist/refs/json-schema-draft-07.json')
-        ajv.addMetaSchema(draft7MetaSchema)
+        ajv.addMetaSchema(Draft07Schema)
       }
       let validationErrors: boolean = true
       let diffResult: string = ''

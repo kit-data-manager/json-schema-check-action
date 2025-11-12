@@ -22,7 +22,13 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/coverage', '**/dist', '**/linter', '**/node_modules']
+    ignores: [
+      '**/coverage',
+      '**/dist',
+      '**/linter',
+      '**/node_modules',
+      'jest.config.mjs'
+    ]
   },
   ...compat.extends(
     'eslint:recommended',
@@ -52,7 +58,7 @@ export default [
       sourceType: 'module',
 
       parserOptions: {
-        project: ['tsconfig.eslint.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: __dirname
       }
     },

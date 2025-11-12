@@ -1,7 +1,7 @@
 // See: https://jestjs.io/docs/configuration
 
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-module.exports = {
+export default {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ['./src/**'],
@@ -21,7 +21,7 @@ module.exports = {
   // },
   extensionsToTreatAsEsm: ['.ts'],
   moduleFileExtensions: ['ts', 'js'],
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/default-esm',
   reporters: ['default'],
   resolver: 'ts-jest-resolver',
   testEnvironment: 'node',

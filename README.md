@@ -100,7 +100,7 @@ to the main branch. You may modify the configuration according to your needs.
 > by the _$schema_ attribute. Currently, schema version draft-07, 2019-09, and
 > 2020-12 are supported. While for 2019-09 and 2020-12 the https schema URLs are
 > supported by the validator, for using schema draft-07 _$schema_ must be set to
-> **https://json-schema.org/draft-07/schema**. If no _$schema_ attribute is
+> **http://json-schema.org/draft-07/schema**. If no _$schema_ attribute is
 > found, the draft-07 validator is used.
 
 For the first run, i.e., if your schema is not released, yet, you'll see a

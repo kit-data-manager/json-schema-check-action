@@ -1,7 +1,7 @@
 {
   "name": "json-schema-check-action",
   "description": "Action for checking JSON schema validity and compatibility.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "",
   "private": true,
   "homepage": "https://github.com/kit-data-manager/json-schema-check-action",
@@ -39,7 +39,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
-    "@apidevtools/json-schema-ref-parser": "^14.2.1",
+    "@apidevtools/json-schema-ref-parser": "^15.1.1",
     "@rollup/plugin-json": "^6.1.0",
     "@types/json-diff": "^1.0.3",
     "ajv": "^8.17.1",

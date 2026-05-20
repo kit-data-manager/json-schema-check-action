@@ -39,7 +39,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^9.1.1",
-    "@actions/http-client": "^3.0.2",
+    "@actions/http-client": "^4.0.0",
     "@apidevtools/json-schema-ref-parser": "^15.1.1",
     "@rollup/plugin-json": "^6.1.0",
     "@types/json-diff": "^1.0.3",

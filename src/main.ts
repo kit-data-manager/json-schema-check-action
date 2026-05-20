@@ -162,6 +162,10 @@ export async function run(): Promise<void> {
 
       core.info('Setting output message.')
       core.setOutput('message', message)
+      const outputFile = 'schema-check-message.md'
+      await writeFile(outputFile, message, 'utf-8')
+      core.setOutput('message-file', outputFile)
+      core.info(`Message written to ${outputFile}`)
       core.info('Setting action summary.')
       await core.summary.addRaw(summary).write()
     }

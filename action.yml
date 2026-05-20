@@ -30,6 +30,8 @@ inputs:
 outputs:
   message:
     description: 'The schema check output as markdown message.'
+  message-file:
+    description: 'The schema check output as markdown file'
 
 runs:
   using: node20

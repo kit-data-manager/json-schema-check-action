@@ -50,7 +50,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.4.1",
+    "@eslint/compat": "^2.0.0",
     "@github/local-action": "^7.0.1",
     "@jest/globals": "^30.0.0",
     "@rollup/plugin-commonjs": "^29.0.0",

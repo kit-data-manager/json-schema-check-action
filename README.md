@@ -85,14 +85,14 @@ As you can see, there are a couple of arguments, where some of them are
 mandatory and others are options. Details can be found in the following table.
 
 | Argument        | Description                                                                                                                                                                                                                                                                                                | Mandatory          | Default |
-| --------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------------ | ------- |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------- |
 | schemaPath      | The relative path where the schema is located in the repository.                                                                                                                                                                                                                                           | :white_check_mark: | -       |
 | validate        | Enabled or disables validation of the schema. Supported values are _true_ or _false_.                                                                                                                                                                                                                      | :x:                | true    |
 | createDiff      | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                                                                                                                                                                                   | :x:                | true    |
 | token           | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_.                                                                                                                                                            | :x:                | -       |
 | previousVersion | The previous version/tag name to apply the diff against. This argument's value must be determined in an upstream action and should have a variable name as value, e.g., ${{ steps.determine-previous-version.outputs.version }}. Using this argument is only recommended for experts and in special cases. | :x:                | -       |
 | aiProvider      | AI provider used to analyze the diff automatically. Supported values: _openai_, _anthropic_ or _openai-compatible_. If empty, the static hints are shown instead of an AI analysis.                                                                                                                        | :x:                | -       |
-| aiModel         | The AI model ID to use for the analysis, e.g., _gpt-4o-mini_ or _claude-3-5-sonnet-latest_.                                                                                                                                                                                                                 | :x:                | -       |
+| aiModel         | The AI model ID to use for the analysis, e.g., _gpt-4o-mini_ or _claude-3-5-sonnet-latest_.                                                                                                                                                                                                                | :x:                | -       |
 | aiBaseUrl       | Optional base URL of the AI endpoint. Defaults to the built-in URL of the selected provider. Required for _openai-compatible_ providers.                                                                                                                                                                   | :x:                | -       |
 | aiSecret        | The API key or secret for the AI provider. Should be passed through an encrypted GitHub Actions secret, e.g., `${{ secrets.MY_AI_KEY }}`.                                                                                                                                                                  | :x:                | -       |
 
@@ -207,8 +207,8 @@ will be a major release.
 
 ### Automatic diff analysis with AI
 
-When a diff is created, the action normally shows a static hint suggesting you to
-ask an AI chatbot to check backwards compatibility and to derive the next
+When a diff is created, the action normally shows a static hint suggesting you
+to ask an AI chatbot to check backwards compatibility and to derive the next
 semantic version from the diff. By configuring an AI provider, this analysis can
 be performed automatically and the result is added to the CI summary instead of
 the static hint.

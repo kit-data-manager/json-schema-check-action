@@ -1,11 +1,11 @@
 // See: https://eslint.org/docs/latest/use/configure/configuration-files
 
-import { fixupPluginRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
-import _import from 'eslint-plugin-import'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import { importX } from 'eslint-plugin-import-x'
 import jest from 'eslint-plugin-jest'
 import prettier from 'eslint-plugin-prettier'
 import globals from 'globals'
@@ -37,9 +37,10 @@ export default [
     'plugin:jest/recommended',
     'plugin:prettier/recommended'
   ),
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
   {
     plugins: {
-      import: fixupPluginRules(_import),
       jest,
       prettier,
       '@typescript-eslint': typescriptEslint
@@ -64,12 +65,12 @@ export default [
     },
 
     settings: {
-      'import/resolver': {
-        typescript: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
           alwaysTryTypes: true,
           project: 'tsconfig.eslint.json'
-        }
-      }
+        })
+      ]
     },
 
     rules: {
@@ -77,7 +78,7 @@ export default [
       'eslint-comments/no-use': 'off',
       'eslint-comments/no-unused-disable': 'off',
       'i18n-text/no-en': 'off',
-      'import/no-namespace': 'off',
+      'import-x/no-namespace': 'off',
       'no-console': 'off',
       'no-shadow': 'off',
       'no-unused-vars': 'off',

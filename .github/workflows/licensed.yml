@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7 # zizmor: ignore[artipacked] credentials are required to push license updates on workflow_dispatch
 
       - name: Setup Node.js
         id: setup-node

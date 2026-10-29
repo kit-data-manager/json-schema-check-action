@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node.js
         id: setup-node
@@ -44,6 +45,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: '^dist/'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: ${{ github.workspace }}
+          STRIP_DEFAULT_WORKSPACE_FOR_REGEX: true
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_BIOME_LINT: false

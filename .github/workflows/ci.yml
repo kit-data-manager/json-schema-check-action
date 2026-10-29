@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         id: setup-node
@@ -54,6 +56,8 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Test Local Action
         id: test-action
@@ -65,4 +69,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Print Output
         id: output
-        run: echo "${{ steps.test-action.outputs.message }}"
+        run: echo "$MESSAGE"
+        env:
+          MESSAGE: ${{ steps.test-action.outputs.message }}

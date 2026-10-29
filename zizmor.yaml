@@ -1,0 +1,9 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # Allow tag/branch-pinned action references (e.g. `@v7`, `@v1.3.2`)
+        # instead of requiring SHA-hash pinning for every action. This matches
+        # the project's convention; Renovate keeps these references up to date.
+        # Completely unpinned `uses:` clauses are still rejected.
+        '*': ref-pin

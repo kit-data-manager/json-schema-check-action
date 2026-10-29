@@ -18,11 +18,11 @@ Before going into details, let's take a look under the hood of the action.
 According to its goals, the action performs four tasks:
 
 1. Validate the schema identified by its filename.
-2. Diff to previous version.
+1. Diff to previous version.
    1. Determine the most recent release and obtain the schema.
-   2. Create a diff between the schema's current development version and the
+   1. Create a diff between the schema's current development version and the
       most recent release version.
-3. Create and print a summary and provide the summary as output for follow-up
+1. Create and print a summary and provide the summary as output for follow-up
    actions.
 
 In order to get access to the current source code, of course, a checkout action
@@ -135,9 +135,9 @@ checking out the code of a tagged version. Another advantage is, that this
 action call creates a bundled schema, i.e., it resolves $ref elements in the
 schema file, which could also be helpful for the schema applicability as some
 tools cannot work with $refs very well. As a result, your release will contain a
-file _bundled-<TAG>.json_, which is expected by this action for creating the
+file `bundled-<TAG>.json`, which is expected by this action for creating the
 diff to the previous release. If the file was found, i.e., if at least one
-release exists which has a file _bundled-<TAG>.json_ attached, you'll see the
+release exists which has a file `bundled-<TAG>.json` attached, you'll see the
 following summary after each action run:
 
 ---

@@ -91,9 +91,44 @@ mandatory and others are options. Details can be found in the following table.
 | createDiff      | Enabled or disables creation of diff to previous schema version. Supported values are _true_ or _false_.                                                                                                                                                                                                   | :x:                | true    |
 | token           | A GitHub token used to authenticate API access for obtaining the most recent release. This argument is only mandatory, if createDiff is _true_.                                                                                                                                                            | :x:                | -       |
 | previousVersion | The previous version/tag name to apply the diff against. This argument's value must be determined in an upstream action and should have a variable name as value, e.g., ${{ steps.determine-previous-version.outputs.version }}. Using this argument is only recommended for experts and in special cases. | :x:                | -       |
+| aiProvider      | AI provider used to analyze the diff automatically. Supported values: _openai_, _anthropic_ or _openai-compatible_. If empty, the static hints are shown instead of an AI analysis.                                                                                                                        | :x:                | -       |
+| aiModel         | The AI model id to use for the analysis, e.g., _gpt-4o-mini_ or _claude-3-5-sonnet-latest_.                                                                                                                                                                                                                | :x:                | -       |
+| aiBaseUrl       | Optional base URL of the AI endpoint. Defaults to the built-in URL of the selected provider. Required for _openai-compatible_ providers.                                                                                                                                                                   | :x:                | -       |
+| aiSecret        | The API key or secret for the AI provider. Should be passed through an encrypted GitHub Actions secret, e.g., `${{ secrets.MY_AI_KEY }}`.                                                                                                                                                                  | :x:                | -       |
 
 If configured correctly, the action will now run on each build for pull requests
 to the main branch. You may modify the configuration according to your needs.
+
+### Automatic diff analysis with AI
+
+When a diff exists, the action normally shows a static hint suggesting you to
+ask an AI chatbot to check backwards compatibility and to derive the next
+semantic version from the diff. By configuring an AI provider, this analysis can
+be performed automatically and the result is added to the CI summary instead of
+the static hint.
+
+```yaml
+- name: JSON Schema Check
+  uses: kit-data-manager/json-schema-check-action@v0.0.9
+  with:
+    schemaPath: 'schema.json'
+    token: ${{ secrets.GITHUB_TOKEN }}
+    aiProvider: 'openai'
+    aiModel: 'gpt-4o-mini'
+    aiBaseUrl: 'https://api.openai.com/v1' # optional for openai / anthropic
+    aiSecret: ${{ secrets.MY_AI_KEY }}
+```
+
+The provider may be any of:
+
+- _openai_: uses the OpenAI Chat Completions API. Defaults to
+  `https://api.openai.com/v1`.
+- _anthropic_: uses the Anthropic Messages API. Defaults to
+  `https://api.anthropic.com/v1`.
+- _openai-compatible_: any OpenAI-compatible endpoint. Requires `_aiBaseUrl_`.
+
+If the AI request fails or is only partially configured, the action logs a
+warning and falls back to the static hints, so the summary remains useful.
 
 > [!IMPORTANT]  
 > The action automatically selects the schema validator based on the URL given

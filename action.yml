@@ -27,6 +27,25 @@ inputs:
   previousVersion:
     description: 'The previous version/tag name to apply the diff against.'
     required: false
+  aiProvider:
+    description:
+      'AI provider used to analyze the diff automatically. One of "openai",
+      "anthropic" or "openai-compatible". If empty, static hints are shown
+      instead of an AI analysis.'
+    required: false
+  aiModel:
+    description: 'The AI model id to use for the analysis.'
+    required: false
+  aiBaseUrl:
+    description:
+      'Optional base URL of an OpenAI-compatible endpoint. Defaults to the
+      built-in URL of the selected provider.'
+    required: false
+  aiSecret:
+    description:
+      'The API key or secret for the AI provider. Should be passed via an
+      encrypted GitHub Actions secret.'
+    required: false
 outputs:
   message:
     description: 'The schema check output as markdown message.'

@@ -9,6 +9,7 @@ import * as $RefParser from '@apidevtools/json-schema-ref-parser'
 import * as path from 'path'
 import { upload } from './upload_schema_asset'
 import { writeFile } from 'fs/promises'
+import { analyzeDiff, readAiConfig, isAiConfigured } from './ai'
 
 export async function run(): Promise<void> {
   try {
@@ -118,21 +119,7 @@ export async function run(): Promise<void> {
             }
 
             message += '```diff\n' + diffResult + '\n```\n\n'
-            message +=
-              '> [!TIP]\n' +
-              '> To check schema backwards compatibility, you may use any AI chatbot with a prompt like:\n' +
-              '> \n' +
-              '>   **Assuming I have two JSON schemas, both are different according to the following diff, are both schemas compatible?\n' +
-              '>   <PASTE_DIFF_HERE>**\n' +
-              '>\n' +
-              '> If you like, you may add additional rendering instructions, e.g.:\n' +
-              '>\n' +
-              '> **Render the result as table showing the changed attributes, a columns to check backward compatibility, ' +
-              '> and a column to provide comments on why a certain property is not backwards compatible.**\n' +
-              '>\n' +
-              '> Furthermore, you can also use the diff to get a hint on which schema version to use next:\n' +
-              '>    **Assuming I have a JSON schema in version 1.0.0 and the next version has the following changes in diff format. Which would be the next version number following semantic versioning principles?\n' +
-              '>   <PASTE_DIFF_HERE>**\n'
+            message += await buildDiffAnalysis(diffResult, data)
           }
         } else {
           message += '```diff\nNo previous schema version found.\n```\n\n'
@@ -231,4 +218,49 @@ async function bundleJson(inputFile: string): Promise<object> {
     core.setFailed('Failed to bundle schema. ' + err)
     return {}
   }
+}
+
+/**
+ * Builds the diff analysis section of the summary. If an AI provider is
+ * configured, the diff and the bundled schema are sent to the model for a
+ * backwards compatibility report, an assessment of the new schema, and a
+ * suggested next semantic version. Otherwise the static hints are returned so
+ * users can perform the analysis manually.
+ */
+async function buildDiffAnalysis(
+  diffResult: string,
+  schema: object
+): Promise<string> {
+  const config = readAiConfig()
+  if (isAiConfigured(config)) {
+    core.info(
+      `Analyzing diff with AI provider '${config.provider}' and model '${config.model}'.`
+    )
+    try {
+      const analysis = await analyzeDiff(config, diffResult, schema)
+      return '### AI Analysis\n\n' + analysis + '\n\n'
+    } catch (error) {
+      core.warning(
+        `AI analysis failed (${(error as Error).message}). Falling back to static hints.`
+      )
+    }
+  } else {
+    core.info(`AI provider not configured. Providing static hint.`)
+  }
+  return (
+    '> [!TIP]\n' +
+    '> To check schema backwards compatibility, you may use any AI chatbot with a prompt like:\n' +
+    '> \n' +
+    '>   **Assuming I have two JSON schemas, both are different according to the following diff, are both schemas compatible?\n' +
+    '>   <PASTE_DIFF_HERE>**\n' +
+    '>\n' +
+    '> If you like, you may add additional rendering instructions, e.g.:\n' +
+    '>\n' +
+    '> **Render the result as table showing the changed attributes, a columns to check backward compatibility, ' +
+    '> and a column to provide comments on why a certain property is not backwards compatible.**\n' +
+    '>\n' +
+    '> Furthermore, you can also use the diff to get a hint on which schema version to use next:\n' +
+    '>    **Assuming I have a JSON schema in version 1.0.0 and the next version has the following changes in diff format. Which would be the next version number following semantic versioning principles?\n' +
+    '>   <PASTE_DIFF_HERE>**\n'
+  )
 }

@@ -18,11 +18,11 @@ Before going into details, let's take a look under the hood of the action.
 According to its goals, the action performs four tasks:
 
 1. Validate the schema identified by its filename.
-2. Diff to previous version.
+1. Diff to previous version.
    1. Determine the most recent release and obtain the schema.
-   2. Create a diff between the schema's current development version and the
+   1. Create a diff between the schema's current development version and the
       most recent release version.
-3. Create and print a summary and provide the summary as output for follow-up
+1. Create and print a summary and provide the summary as output for follow-up
    actions.
 
 In order to get access to the current source code, of course, a checkout action
